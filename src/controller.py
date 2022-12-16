@@ -10,7 +10,7 @@ class Controller:
         self.app.run(**kwargs)
 
     def _get_flask_app(self):
-        app = Flask(__name__, template_folder="../view", static_folder="../view")
+        app = Flask(__name__, template_folder="./view", static_folder="./view")
 
         @app.route("/")
         def index():

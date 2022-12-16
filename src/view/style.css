@@ -1,0 +1,36 @@
+html,
+body {
+    height: 100%;
+}
+
+#wrapper {
+    height: 100%;
+
+    display: grid;
+    grid-template-columns: repeat(16, 1fr);
+    grid-template-rows: repeat(9, 1fr);
+}
+
+#upload-window-button {
+    grid-column: 15;
+    grid-row: 8;
+
+    width: 64px;
+    height: 64px;
+
+    border: none;
+}
+
+#upload-window {
+    display: none;
+
+    grid-column: 6/10;
+    grid-row: 3/7;
+}
+
+#upload-zone {
+    height: 100%;
+    width: 100%;
+    border: 2px dashed #ccc;
+    border-radius: 20px;
+}
