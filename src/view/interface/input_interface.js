@@ -7,7 +7,7 @@ export class InputInterface {
         // let image = this.load_image()
     }
     load_image() {
-        let image = new Image
+        let image = new Image()
         image.onload = () => { image.src = "view/image.jpg" }
 
         const canvas = document.createElement("canvas")

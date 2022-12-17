@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 
 
 class Controller:
@@ -14,6 +14,12 @@ class Controller:
 
         @app.route("/")
         def index():
+            return render_template("index.html")
+
+        @app.route("/send_image", methods=["POST"])
+        def send_image():
+            blob = request.files["image"]
+            color_palette = self.model.extract_color_palette(blob)
             return render_template("index.html")
 
         return app
