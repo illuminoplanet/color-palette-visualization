@@ -19,7 +19,7 @@ class Controller:
         @app.route("/send_image", methods=["POST"])
         def send_image():
             blob = request.files["image"]
-            color_palette = self.model.extract_color_palette(blob)
+            color_palette = self.model.process(blob)
             return render_template("index.html")
 
         return app
