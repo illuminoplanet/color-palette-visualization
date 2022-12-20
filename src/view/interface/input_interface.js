@@ -43,8 +43,10 @@ class UploadWindow {
         $form.on("drop", (e) => {
             let is_open = ($("#upload-window").attr("is_open") === "true")
             if (is_open) {
-                let uploaded_image = e.originalEvent.dataTransfer.files
-                mediator.notify("image_upload", uploaded_image)
+                let form_data = new FormData()
+                form_data.append("image", e.originalEvent.dataTransfer.files[0])
+
+                mediator.notify("image_upload", form_data)
 
                 $("#upload-window").attr("is_open", false)
                 $("#upload-window").hide()

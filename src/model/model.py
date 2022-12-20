@@ -14,8 +14,8 @@ class Model:
         color_palette = self.cp_extractor.process(array)
         return color_palette
 
-    def _blob_to_array(self, blob):
-        image = Image.open(blob.stream)
+    def _blob_to_array(self, image):
+        image = Image.open(image)
         image = image.convert("RGB")
 
         array = np.asarray(image, dtype=np.float32).reshape(-1, 3)

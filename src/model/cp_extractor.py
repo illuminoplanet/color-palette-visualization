@@ -1,14 +1,20 @@
 import numpy as np
 
+from .kmeans import KMeans
+
 
 class CPExtractor:
     def __init__(self):
-        pass
+        self.cp_algorithm = KMeans()
 
     def process(self, srgb):
-        xyz_array = self._srgb_to_xyz(srgb)
+        lab_array = self._srgb_to_lab(srgb)
+        color_palette = self.cp_algorithm(
+            lab_array, 8, params={"n_iter": 100, "batch_size": 1024}
+        )
+        return color_palette
 
-    def _srgb_to_xyz(srgb):
+    def _srgb_to_lab(self, srgb):
         # sRGB to linear RGB
         rgb = np.zeros_like(srgb, dtype=np.float32)
         srgb = srgb / 255

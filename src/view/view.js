@@ -41,18 +41,14 @@ class RequestHandler {
     constructor(mediator) {
         this.mediator = mediator
     }
-    send_image(uploaded_image) {
-        console.log(uploaded_image)
-
-        let form_data = new FormData()
-        form_data.append("image", uploaded_image)
-
+    send_image(form_data) {
         $.ajax({
             url: "http://localhost:5000/send_image",
             type: "POST",
             data: form_data,
-            contentType: false,
             processData: false,
+            contentType: false,
+            cache: false,
             success: function (response) {
                 this.mediator.notify("process_result", response)
             }
