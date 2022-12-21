@@ -42,17 +42,16 @@ class RequestHandler {
         this.mediator = mediator
     }
     send_image(form_data) {
-        $.ajax({
+        let response = $.ajax({
             url: "http://localhost:5000/send_image",
             type: "POST",
             data: form_data,
             processData: false,
             contentType: false,
             cache: false,
-            success: function (response) {
-                this.mediator.notify("process_result", response)
-            }
-        });
+            success: () => { }
+        })
+        this.mediator.notify("process_result", response)
     }
 }
 
