@@ -49,9 +49,7 @@ class RequestHandler {
             processData: false,
             contentType: false,
             cache: false,
-            success: () => { }
-        })
-        this.mediator.notify("process_result", response)
+        }).then((respose) => { this.mediator.notify("process_result", respose) })
     }
 }
 

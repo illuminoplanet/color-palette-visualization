@@ -54,4 +54,20 @@ export class OutputInterface {
         this.renderer.render(this.scene, this.camera)
         this.controller.update()
     }
+    plot(data) {
+        for (let i = 0; i < data["unique"].length; i++) {
+            const [r, g, b] = data["unique"][i]
+            const scale = Math.pow(data["count"][i], 0.2) * 0.02
+
+            const color = new THREE.Color(r, g, b)
+            const material = new THREE.SpriteMaterial({ color: color })
+
+            const sprite = new THREE.Sprite(material)
+            sprite.material.rotation = Math.PI / 4
+            sprite.position.set((r - 0.5) * 2, (g - 0.5) * 2, (b - 0.5) * 2)
+            sprite.scale.set(scale, scale, scale)
+
+            this.scene.add(sprite)
+        }
+    }
 }
