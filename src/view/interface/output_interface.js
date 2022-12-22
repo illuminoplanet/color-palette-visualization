@@ -5,6 +5,7 @@ import { ArcballControls } from "three/addons/controls/ArcballControls.js"
 export class OutputInterface {
     constructor(mediator) {
         this.mediator = mediator
+        window.addEventListener("resize", this.resize.bind(this))
 
         const [w, h] = [window.innerWidth, window.innerHeight]
 
@@ -53,6 +54,14 @@ export class OutputInterface {
 
         this.renderer.render(this.scene, this.camera)
         this.controller.update()
+    }
+    resize() {
+        const [w, h] = [window.innerWidth, window.innerHeight]
+
+        this.camera.aspect = w / h
+        this.camera.updateProjectionMatrix()
+
+        this.renderer.setSize(w, h)
     }
     plot(data) {
         for (let i = 0; i < data["unique"].length; i++) {
