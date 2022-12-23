@@ -31,7 +31,7 @@ class Model:
 
         return array
 
-    def _count_unique(self, image, bin_size=15):
+    def _count_unique(self, image, bin_size=20):
         image = image.copy()
         image = (image // bin_size) * bin_size
 

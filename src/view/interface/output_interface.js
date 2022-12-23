@@ -44,8 +44,8 @@ export class OutputInterface {
             color: 0xFFFFFF, side: THREE.BackSide
         })
 
-        const cube = new THREE.Mesh(geometry, material)
-        this.scene.add(cube)
+        this.cube = new THREE.Mesh(geometry, material)
+        this.scene.add(this.cube)
 
         this.render()
     }
@@ -64,19 +64,48 @@ export class OutputInterface {
         this.renderer.setSize(w, h)
     }
     plot(data) {
+        this.reset()
+
         for (let i = 0; i < data["unique"].length; i++) {
             const [r, g, b] = data["unique"][i]
-            const scale = Math.pow(data["count"][i], 0.2) * 0.02
+            const scale = Math.pow(data["count"][i], 0.15) * 0.02
 
             const color = new THREE.Color(r, g, b)
+            const [x, y, z] = [(r - 0.5) * 2, (g - 0.5) * 2, (b - 0.5) * 2]
             const material = new THREE.SpriteMaterial({ color: color })
 
             const sprite = new THREE.Sprite(material)
             sprite.material.rotation = Math.PI / 4
-            sprite.position.set((r - 0.5) * 2, (g - 0.5) * 2, (b - 0.5) * 2)
+            sprite.position.set(x, y, z)
             sprite.scale.set(scale, scale, scale)
 
             this.scene.add(sprite)
         }
+        for (let i = 0; i < data["color_palette"].length; i++) {
+            const [r, g, b] = data["color_palette"][i]
+
+            const color = new THREE.Color(r, g, b)
+            const [x, y, z] = [(r - 0.5) * 2, (g - 0.5) * 2, (b - 0.5) * 2]
+            const material = new THREE.SpriteMaterial({ color: color })
+
+            const outline = new THREE.Sprite(new THREE.SpriteMaterial({ color: 0x333333 }))
+            outline.material.rotation = Math.PI / 4
+            outline.position.set(x, y, z)
+            outline.scale.set(0.1, 0.1, 0.1)
+            this.scene.add(outline)
+
+            const sprite = new THREE.Sprite(material)
+            sprite.material.rotation = Math.PI / 4
+            sprite.position.set(x, y, z)
+            sprite.scale.set(0.07, 0.07, 0.07)
+            this.scene.add(sprite)
+        }
+    }
+    reset() {
+        this.scene.remove.apply(this.scene, this.scene.children)
+
+        this.scene.add(this.ambient_light)
+        this.scene.add(this.point_light)
+        this.scene.add(this.cube)
     }
 }

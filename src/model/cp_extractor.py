@@ -12,6 +12,7 @@ class CPExtractor:
         color_palette = self.cp_algorithm(
             lab_array, 8, params={"n_iter": 100, "batch_size": 1024}
         )
+        color_palette = self._lab_to_srgb(color_palette) / 255
         return color_palette
 
     def _srgb_to_lab(self, srgb):
@@ -52,3 +53,43 @@ class CPExtractor:
         lab[:, 2] = 200 * (temp[:, 1] - temp[:, 2])
 
         return lab
+
+    def _lab_to_srgb(self, lab):
+        # L*a*b to XYZ
+        delta = 6 / 29
+
+        def f_inverse(t):
+            mask = t > delta
+            new = np.zeros_like(t)
+
+            new[mask] = t[mask] ** 3
+            new[~mask] = 3 * (delta**2) * (t[~mask] - (4 / 29))
+            return new
+
+        xyz = np.zeros_like(lab, dtype=np.float32)
+        temp = (lab + np.array([16.0, 0.0, 0.0])) / np.array([116.0, 500.0, 200.0])
+
+        xyz[:, 0] = f_inverse(temp[:, 0] + temp[:, 1])
+        xyz[:, 1] = f_inverse(temp[:, 0])
+        xyz[:, 2] = f_inverse(temp[:, 0] - temp[:, 2])
+        xyz *= np.array([95.0489, 100.0, 108.8840])
+
+        # XYZ to linear RGB
+        m = np.array(
+            [
+                [3.2406, -1.5372, -0.4986],
+                [-0.9689, 1.8758, 0.0415],
+                [0.0557, -0.2040, 1.0570],
+            ]
+        )
+        rgb = np.dot(m, xyz.T).T / 100
+
+        # linear RGB to sRGB
+        srgb = np.zeros_like(rgb, dtype=np.float32)
+        mask = rgb <= 0.0031308
+
+        srgb[mask] = rgb[mask] * 12.92
+        srgb[~mask] = (rgb[~mask] ** (1 / 2.4)) * 1.055 - 0.055
+        srgb *= 255
+
+        return srgb
