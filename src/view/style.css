@@ -1,12 +1,14 @@
 html,
 body {
     height: 100%;
+    margin: 0;
 }
 
 canvas {
     position: absolute;
+    display: block;
     top: 0%;
-    z-index: -100;
+    z-index: -10;
 }
 
 #wrapper {
@@ -21,10 +23,54 @@ canvas {
     grid-column: 15;
     grid-row: 8;
 
-    width: 64px;
-    height: 64px;
+    width: 72px;
+    height: 72px;
+    background-color: white;
 
     border: none;
+    border-radius: 4px;
+    transform: rotate(45deg);
+
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+    transition: background-color 0.2s ease-in;
+}
+
+#upload-window-button::before {
+    position: absolute;
+    content: "";
+
+    width: 72px;
+    height: 72px;
+    background: linear-gradient(90deg, rgba(255, 210, 110, 1) 0%, rgba(255, 0, 168, 1) 100%);
+
+    border-radius: 4px;
+    transform: translate(-50%, -50%);
+
+    opacity: 0%;
+    transition: opacity 0.15s ease-in;
+    z-index: 5;
+}
+
+#upload-window-button:hover::before {
+    opacity: 20%;
+    transition: opacity 0.15s ease-in;
+}
+
+#upload-window-button:active::before {
+    opacity: 70%;
+    transition: opacity 0s ease-in;
+}
+
+#upload-window-button::after {
+    position: absolute;
+    content: "";
+
+    width: 64px;
+    height: 64px;
+    background: url("resources/upload.png") no-repeat 0px 0px fixed;
+
+    transform: rotate(-45deg) translateY(-72%) scale(0.45);
+    z-index: 10;
 }
 
 #upload-window {
