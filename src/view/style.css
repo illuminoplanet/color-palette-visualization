@@ -76,13 +76,25 @@ canvas {
 #upload-window {
     display: none;
 
-    grid-column: 6/10;
-    grid-row: 3/7;
+    grid-column: 7/11;
+    grid-row: 3/8;
+
+    background-color: white;
+    border-radius: 4px;
+
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
 }
 
 #upload-zone {
-    height: 100%;
-    width: 100%;
+    position: relative;
+    top: 50%;
+    left: 50%;
+
+    width: calc(100% - 48px);
+    height: calc(100% - 48px);
+
     border: 2px dashed #ccc;
     border-radius: 20px;
+
+    transform: translate(-50%, -50%);
 }
