@@ -52,12 +52,12 @@ canvas {
 }
 
 #upload-window-button:hover::before {
-    opacity: 20%;
+    opacity: 8%;
     transition: opacity 0.15s ease-in;
 }
 
 #upload-window-button:active::before {
-    opacity: 70%;
+    opacity: 24%;
     transition: opacity 0s ease-in;
 }
 

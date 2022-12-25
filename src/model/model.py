@@ -1,34 +1,40 @@
 from PIL import Image
 import numpy as np
-import cv2
 
+from .object_detector import ObjectDetector
 from .cp_extractor import CPExtractor
 
 
 class Model:
     def __init__(self):
+        self.object_detector = ObjectDetector()
         self.cp_extractor = CPExtractor()
 
     def process(self, blob):
         array = self._blob_to_array(blob)
+        results = {}
 
-        color_palette = self.cp_extractor.process(array)
-        unique, count = self._count_unique(array)
+        object_detected = self.object_detector.process(array)
+        for i, (label, box, image) in enumerate(object_detected):
+            color_palette = self.cp_extractor.process(image)
+            unique, count = self._count_unique(array)
 
-        result = {
-            "color_palette": color_palette.tolist(),
-            "unique": unique.tolist(),
-            "count": count.tolist(),
-        }
-        return result
+            result = {
+                "label": label,
+                "box": box,
+                "color_palette": color_palette.tolist(),
+                "unique": unique.tolist(),
+                "count": count.tolist(),
+            }
+            results[i] = result
+
+        return results
 
     def _blob_to_array(self, image):
         image = Image.open(image)
         image = image.convert("RGB")
 
         array = np.asarray(image, dtype=np.float32)
-        array = cv2.resize(array, (1024, 1024)).reshape(-1, 3)
-
         return array
 
     def _count_unique(self, image, bin_size=20):
