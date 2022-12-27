@@ -29,8 +29,15 @@ class Mediator {
         if (event === "image_upload") {
             let request_handler = this.components["request_handler"]
             request_handler.send_image(data)
+
+            let input_interface = this.components["input_interface"]
+            input_interface.set_image(data.get("image"))
         }
         if (event === "process_result") {
+            let input_interface = this.components["input_interface"]
+            input_interface.update_selector(data)
+        }
+        if (event === "plot_point") {
             let output_interface = this.components["output_interface"]
             output_interface.plot(data)
         }

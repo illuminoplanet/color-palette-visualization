@@ -28,7 +28,7 @@ class ObjectDetector:
         return results
 
     def _postprocess(self, image, results):
-        objects = [("original", -1, image.copy().reshape(-1, 3))]
+        objects = [("original", (0, 0, *image.shape[:2]), image.copy().reshape(-1, 3))]
         for _, label, box in results:
             box = [round(i) for i in box.tolist()]
             cropped = image.copy()[box[1] : box[3], box[0] : box[2]].reshape(-1, 3)

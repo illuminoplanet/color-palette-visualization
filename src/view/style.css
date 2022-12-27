@@ -98,3 +98,24 @@ canvas {
 
     transform: translate(-50%, -50%);
 }
+
+#selector {
+    grid-column: 1/17;
+    grid-row: 1/2;
+
+    background-color: black;
+}
+
+.element {
+    width: 100px;
+    height: 100px;
+
+    z-index: 20;
+}
+
+.element-canvas {
+    width: 100%;
+    height: 100%;
+
+    z-index: 20;
+}
