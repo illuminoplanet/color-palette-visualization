@@ -73,6 +73,14 @@ class UploadWindow {
         $modal_header.text("Upload Image")
 
         let $upload_zone = $("<form>", { "id": "upload-zone" })
+        let $upload_icon = $("<span>", { "id": "upload-icon", "class": "material-symbols-outlined" })
+        let $upload_text = $("<span>", { "id": "upload-text" })
+        $upload_icon.text("upload")
+        $upload_text.text("Drag & Drop to Upload")
+        $upload_zone.append($upload_icon)
+        $upload_zone.append($upload_text)
+
+
         $modal_body.append($upload_zone)
         $modal_header.append($modal_close)
         $modal_content.append($modal_header)
@@ -96,6 +104,16 @@ class UploadWindow {
                 $("#upload-window").attr("is_open", false)
                 $("#upload-window").hide()
             }
+        })
+        $form.on("dragover dragenter", () => {
+            $form.addClass("drag-enter")
+            $("#upload-text").addClass("drag-enter")
+            $("#upload-icon").addClass("drag-enter")
+        })
+        $form.on("dragleave dragend drop", () => {
+            $form.removeClass("drag-enter")
+            $("#upload-text").removeClass("drag-enter")
+            $("#upload-icon").removeClass("drag-enter")
         })
     }
     show() {
