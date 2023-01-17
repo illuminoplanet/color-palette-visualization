@@ -3,15 +3,52 @@ export class InputInterface {
         this.mediator = mediator
 
         this.upload_window = new UploadWindow(mediator)
-        this.upload_window_button = new Button("upload-window-button", this.upload_window.toggle)
+        this.upload_window_button = new Button("upload-window-button", this.upload_window.show)
 
-        this.image_slider = new ImageSelector(mediator)
+        this.instance_carousel = new InstanceCarousel(mediator)
     }
-    set_image(image) {
-        this.image = image
+    store_image(file) {
+        this.to_image(file).then((image) => {
+            this.image = this.resize_image(image, 512)
+            this.to_DataURL(this.image).then(
+                (file) => this.mediator.notify("image_send", file)
+            )
+        })
     }
-    update_selector(data) {
-        this.image_slider.update_selector(this.image, data)
+    async to_image(file) {
+        let image = await new Promise((resolve) => {
+            let file_reader = new FileReader()
+            file_reader.onload = (e) => {
+                let image = new Image()
+                image.src = e.target.result
+                resolve(image)
+            }
+            file_reader.readAsDataURL(file)
+        })
+        return image
+    }
+    async to_DataURL(image) {
+        let file = await new Promise((resolve) => {
+            image.toBlob((blob) => {
+                resolve(blob)
+            }), 'image/jpeg'
+        })
+        return file
+    }
+    resize_image(image, max_size) {
+        const ratio = max_size / Math.max(image.width, image.height)
+
+        let canvas = document.createElement("canvas")
+        canvas.width = image.width * ratio
+        canvas.height = image.height * ratio
+
+        let ctx = canvas.getContext("2d")
+        ctx.drawImage(image, 0, 0)
+
+        return canvas
+    }
+    update_carousel(entries) {
+        this.instance_carousel.update_carousel(this.image, entries)
     }
 }
 
@@ -25,12 +62,26 @@ class Button {
 
 class UploadWindow {
     constructor(mediator) {
-        let $div = $("<div>", { "id": "upload-window", "is_open": false })
-        let $form = $("<form>", { "id": "upload-zone" })
-        $div.append($form)
-        $("#wrapper").append($div)
+        let $modal = $("<div>", { "class": "modal", "id": "upload-window", "is_open": false })
+        let $modal_content = $("<div>", { "class": "modal-content" })
+        let $modal_header = $("<div>", { "class": "modal-header" })
+        let $modal_seperator = $("<hr>", { "class": "modal-seperator" })
+        let $modal_body = $("<div>", { "class": "modal-body" })
+        let $modal_close = $("<span>", { "class": "modal-close" })
+        $modal_close.text("\u2715")
+        $modal_close.click(this.hide)
+        $modal_header.text("Upload Image")
 
-        this.init_event_listener($form, mediator)
+        let $upload_zone = $("<form>", { "id": "upload-zone" })
+        $modal_body.append($upload_zone)
+        $modal_header.append($modal_close)
+        $modal_content.append($modal_header)
+        $modal_content.append($modal_seperator)
+        $modal_content.append($modal_body)
+        $modal.append($modal_content)
+        $("#wrapper").append($modal)
+
+        this.init_event_listener($upload_zone, mediator)
     }
     init_event_listener($form, mediator) {
         $form.on("drag dragstart dragend dragover dragenter dragleave drop", (e) => {
@@ -40,61 +91,59 @@ class UploadWindow {
         $form.on("drop", (e) => {
             let is_open = ($("#upload-window").attr("is_open") === "true")
             if (is_open) {
-                let form_data = new FormData()
-                form_data.append("image", e.originalEvent.dataTransfer.files[0])
-
-                mediator.notify("image_upload", form_data)
+                mediator.notify("image_upload", e.originalEvent.dataTransfer.files[0])
 
                 $("#upload-window").attr("is_open", false)
                 $("#upload-window").hide()
             }
         })
     }
-    toggle() {
-        let is_open = ($("#upload-window").attr("is_open") === "true")
-        if (!is_open) { $("#upload-window").show() } else { $("#upload-window").hide() }
-        $("#upload-window").attr("is_open", !is_open)
+    show() {
+        $("#upload-window").attr("is_open", true)
+        $("#upload-window").show()
+    }
+    hide() {
+        $("#upload-window").attr("is_open", false)
+        $("#upload-window").hide()
     }
 }
 
-class ImageSelector {
+class InstanceCarousel {
     constructor(mediator) {
-        let $selector = $("<div>", { "id": "selector" })
-        $("#wrapper").append($selector)
+        this.$carousel = $("<div>", { "id": "carousel" })
+        $("#wrapper").append(this.$carousel)
 
     }
-    update_selector(file, data) {
-        this.data = data
-        this.read_image(file).then((image) => {
-            for (let [i, key] of Object.keys(data).entries()) {
-                let $element = $("<div>", { "class": "element" })
-                let $canvas = this.crop_image(image, data[key]["box"])
-
-                $element.append($canvas)
-                $("#selector").append($element)
-            }
-        })
+    update_carousel(image, entries) {
+        this.image = image
+        for (let i = 0; i < entries.length; i++) {
+            this.$carousel.append(this.create_card(entries[i]))
+        }
     }
-    crop_image(image, box) {
-        const [x1, x2, y1, y2] = box
+    crop_image(box) {
+        const [x1, y1, x2, y2] = box
 
-        let $canvas = $("<canvas>", { "class": "element-canvas" })
+        let $canvas = $("<canvas>", { "class": "carousel-image" })
+
+        $canvas.get(0).width = this.image.width * 0.1
+        $canvas.get(0).height = this.image.height * 0.1
+
         let ctx = $canvas.get(0).getContext("2d")
-        console.log(box)
-        ctx.drawImage(image, x1, y1, x2 - x1, y2 - y1, 0, 0, x2 - x1, y2 - y1)
+        ctx.drawImage(this.image, x1, y1, x2 - x1, y2 - y1, 0, 0, x2 - x1, y2 - y1)
 
         return $canvas
     }
-    async read_image(file) {
-        let image = await new Promise((resolve) => {
-            let file_reader = new FileReader()
-            file_reader.onload = (e) => {
-                let image = new Image()
-                image.src = e.target.result
-                resolve(image)
-            }
-            file_reader.readAsDataURL(file)
-        })
-        return image
+    create_card(data) {
+        let $card = $("<div>", { "class": "carousel-card" })
+
+        let $image = this.crop_image(data["box"])
+        let $label = $("<span>", { "class": "carousel-label" })
+        $label.text(data["label"])
+
+        $card.append($image)
+        $card.append($label)
+
+        return $card
     }
+
 } 
