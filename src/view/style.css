@@ -1,5 +1,6 @@
 html,
 body {
+    overflow: hidden;
     font-family: 'Raleway', sans-serif;
     height: 100%;
     margin: 0;
@@ -21,18 +22,20 @@ canvas {
 }
 
 #upload-window-button {
-    grid-column: 15;
-    grid-row: 8;
+    margin: 32px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
-    width: 72px;
-    height: 72px;
+    width: 40px;
+    height: 40px;
     background-color: white;
 
     border: none;
-    border-radius: 4px;
-    transform: rotate(45deg);
+    border-radius: 2px;
 
-    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 0px 1px 0px, rgba(60, 64, 67, 0.15) 0px 1px 2px 1px;
     transition: background-color 0.2s ease-in;
 }
 
@@ -40,12 +43,11 @@ canvas {
     position: absolute;
     content: "";
 
-    width: 72px;
-    height: 72px;
+    width: 40px;
+    height: 40px;
     background: linear-gradient(90deg, rgba(255, 210, 110, 1) 0%, rgba(255, 0, 168, 1) 100%);
 
-    border-radius: 4px;
-    transform: translate(-50%, -50%);
+    border-radius: 2px;
 
     opacity: 0%;
     transition: opacity 0.15s ease-in;
@@ -55,23 +57,73 @@ canvas {
 #upload-window-button:hover::before {
     opacity: 8%;
     transition: opacity 0.15s ease-in;
+    cursor: pointer;
 }
 
 #upload-window-button:active::before {
     opacity: 24%;
     transition: opacity 0s ease-in;
+    cursor: pointer;
 }
 
-#upload-window-button::after {
+#upload-window-icon {
+    position: absolute;
+    user-select: none;
+    font-size: 32px;
+    color:#aaa;
+}
+
+
+#select-window-button {
+    margin: 32px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 40px;
+    height: 40px;
+    background-color: white;
+
+    border: none;
+    border-radius: 2px;
+
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 0px 1px 0px, rgba(60, 64, 67, 0.15) 0px 1px 2px 1px;
+    transition: background-color 0.2s ease-in;
+}
+
+#select-window-button::before {
     position: absolute;
     content: "";
 
-    width: 64px;
-    height: 64px;
-    background: url("resources/upload.png") no-repeat 0px 0px fixed;
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(90deg, rgba(255, 210, 110, 1) 0%, rgba(255, 0, 168, 1) 100%);
 
-    transform: rotate(-45deg) translateY(-72%) scale(0.45);
-    z-index: 10;
+    border-radius: 2px;
+
+    opacity: 0%;
+    transition: opacity 0.15s ease-in;
+    z-index: 5;
+}
+
+#select-window-button:hover::before {
+    opacity: 8%;
+    transition: opacity 0.15s ease-in;
+    cursor: pointer;
+}
+
+#select-window-button:active::before {
+    opacity: 24%;
+    transition: opacity 0s ease-in;
+    cursor: pointer;
+}
+
+#select-window-icon {
+    position: absolute;
+    user-select: none;
+    font-size: 32px;
+    color:#aaa;
 }
 
 .modal {
@@ -151,14 +203,17 @@ canvas {
 
 #upload-zone.drag-enter {
     border: 1px solid rgb(155, 155, 255);
+    background-color: rgb(155, 155, 255, 0.05);
 }
 
 #upload-icon {
+    user-select: none;
     font-size: 56px;
     color:#aaa;
 }
 
 #upload-text {
+    user-select: none;
     font-size: 24px;
     color:#aaa;
 }
@@ -168,28 +223,27 @@ canvas {
     color:rgb(155, 155, 255);
 }
 
-#carousel {
+#sidebar {
     position: absolute;
+    top: 0px;
+    right: 0px;
+    width: 64px;
+    height: 100%;
+	
+	display: flex;
+    flex-wrap: wrap;
+	flex-direction: column;
+    justify-content: center;
+	align-content: center;
+	
+    z-index: 10;
+    transition: transform 0.15s linear;
+	transform: translateX(100%);
 
-    top: 64px;
-    right: 64px;
-
-    background-color: black;
+    background-color: white;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
 }
-
-.carousel-card {
-    position: relative;
-
-    background-color: aqua;
-    border-radius: 10px;
-}
-
-.carousel-image {
-    width: 140px;
-    height: 140px;
-    border-radius: 50%;
-}
-
-.carousel-label {
-    z-index: 20;
+#sidebar.open {
+    transition: transform 0.5s cubic-bezier(0, 1, 0, 1);
+    transform: translateX(0%);
 }

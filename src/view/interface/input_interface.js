@@ -3,9 +3,8 @@ export class InputInterface {
         this.mediator = mediator
 
         this.upload_window = new UploadWindow(mediator)
-        this.upload_window_button = new Button("upload-window-button", this.upload_window.show)
-
         this.instance_carousel = new InstanceCarousel(mediator)
+        this.sidebar = new SideBar(mediator)
     }
     store_image(file) {
         this.to_image(file).then((image) => {
@@ -56,7 +55,6 @@ class Button {
     constructor(id, onclick) {
         let $button = $("<button>", { "id": id })
         $button.click(onclick)
-        $("#wrapper").append($button)
     }
 }
 
@@ -163,5 +161,43 @@ class InstanceCarousel {
 
         return $card
     }
-
 } 
+
+class SideBar {
+    constructor(mediator) {
+        this.mediator = mediator
+
+        let $sidebar = $("<nav>", { "id" : "sidebar" })
+
+        let $upload_button = $("<button>", { "id": "upload-window-button" })
+        let $upload_icon = $("<span>", { "class": "material-symbols-outlined", "id": "upload-window-icon" })
+        $upload_icon.text("upload")
+        $upload_button.click(this.show_upload_window.bind(this))
+        $upload_button.append($upload_icon)
+
+        let $select_button = $("<button>", { "id": "select-window-button" })
+        let $select_icon = $("<span>", { "class": "material-symbols-outlined", "id": "select-window-icon" })
+        $select_icon.text("location_away")
+        $select_button.click(this.show_select_window.bind(this))
+        $select_button.append($select_icon)
+
+
+        window.addEventListener("mousemove", this.mouse_move.bind(this))
+        $sidebar.append($select_button)
+        $sidebar.append($upload_button)
+        $("#wrapper").append($sidebar)
+    }
+    mouse_move(event) {
+        event = event || window.event
+        if (event.pageX >= window.innerWidth - 64) 
+            $("#sidebar").addClass("open")
+		else 
+            $("#sidebar").removeClass("open")
+	}
+    show_upload_window() {
+        this.mediator.notify("show_upload_window", null)
+    }
+    show_select_window() {
+        this.mediator.notify("show_select_window", null)
+    }
+}

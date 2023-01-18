@@ -26,20 +26,26 @@ class Mediator {
         this.components = { ...this.components, ...components }
     }
     notify(event, data) {
+        console.log(event)
         if (event === "image_upload") {
+            let input_interface = this.components["input_interface"]
+            input_interface.store_image(data)
+        }
+        if (event === "image_send") {
             let request_handler = this.components["request_handler"]
             request_handler.send_image(data)
-
-            let input_interface = this.components["input_interface"]
-            input_interface.set_image(data.get("image"))
         }
         if (event === "process_result") {
             let input_interface = this.components["input_interface"]
-            input_interface.update_selector(data)
+            input_interface.update_carousel(data["results"])
         }
         if (event === "plot_point") {
             let output_interface = this.components["output_interface"]
             output_interface.plot(data)
+        }
+        if (event === "show_upload_window") {
+            let input_interface = this.components["input_interface"]
+            input_interface.upload_window.show()
         }
     }
 }
@@ -48,7 +54,10 @@ class RequestHandler {
     constructor(mediator) {
         this.mediator = mediator
     }
-    send_image(form_data) {
+    send_image(image) {
+        let form_data = new FormData()
+        form_data.append("image", image)
+
         let response = $.ajax({
             url: "http://localhost:5000/send_image",
             type: "POST",
@@ -56,7 +65,10 @@ class RequestHandler {
             processData: false,
             contentType: false,
             cache: false,
-        }).then((respose) => { this.mediator.notify("process_result", respose) })
+            success: function () {
+                console.log('in success');
+            },
+        }).then((response) => { this.mediator.notify("process_result", response) })
     }
 }
 
