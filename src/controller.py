@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 
 
 class Controller:
@@ -20,6 +20,6 @@ class Controller:
         def send_image():
             image = request.files["image"]
             result = self.model.process(image)
-            return result
+            return jsonify(result)
 
         return app

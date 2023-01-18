@@ -12,7 +12,7 @@ class Model:
 
     def process(self, blob):
         array = self._blob_to_array(blob)
-        results = {}
+        results = []
 
         object_detected = self.object_detector.process(array)
         for i, (label, box, image) in enumerate(object_detected):
@@ -26,7 +26,7 @@ class Model:
                 "unique": unique.tolist(),
                 "count": count.tolist(),
             }
-            results[i] = result
+            results.append(result)
 
         return results
 
