@@ -26,7 +26,6 @@ class Mediator {
         this.components = { ...this.components, ...components }
     }
     notify(event, data) {
-        console.log(event)
         if (event === "image_upload") {
             let input_interface = this.components["input_interface"]
             input_interface.store_image(data)
@@ -55,6 +54,7 @@ class RequestHandler {
         this.mediator = mediator
     }
     send_image(image) {
+        console.log(image)
         let form_data = new FormData()
         form_data.append("image", image)
 
@@ -65,9 +65,6 @@ class RequestHandler {
             processData: false,
             contentType: false,
             cache: false,
-            success: function () {
-                console.log('in success');
-            },
         }).then((response) => { this.mediator.notify("process_result", response) })
     }
 }
@@ -76,3 +73,7 @@ window.onload = () => {
     new View()
 }
 
+// 쉐브론 
+// 옥시덴탈 페트롤룸
+// 애플 
+// 

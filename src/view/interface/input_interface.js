@@ -9,6 +9,7 @@ export class InputInterface {
     store_image(file) {
         this.to_image(file).then((image) => {
             this.image = this.resize_image(image, 512)
+            console.log(this.image)
             this.to_DataURL(this.image).then(
                 (file) => this.mediator.notify("image_send", file)
             )
@@ -117,6 +118,7 @@ class UploadWindow {
     show() {
         $("#upload-window").attr("is_open", true)
         $("#upload-window").show()
+        $("#sidebar").removeClass("open")
     }
     hide() {
         $("#upload-window").attr("is_open", false)
@@ -189,8 +191,10 @@ class SideBar {
     }
     mouse_move(event) {
         event = event || window.event
-        if (event.pageX >= window.innerWidth - 64) 
-            $("#sidebar").addClass("open")
+        if (event.pageX >= window.innerWidth - 64 && event.pageX <= window.innerWidth) {
+            if ($("#upload-window").is(":hidden") && $("#select-window").is(":hidden")) 
+                $("#sidebar").addClass("open")
+        }
 		else 
             $("#sidebar").removeClass("open")
 	}

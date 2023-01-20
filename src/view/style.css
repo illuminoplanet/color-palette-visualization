@@ -203,7 +203,7 @@ canvas {
 
 #upload-zone.drag-enter {
     border: 1px solid rgb(155, 155, 255);
-    background-color: rgb(155, 155, 255, 0.05);
+    background-color: rgb(155, 155, 255, 0.1);
 }
 
 #upload-icon {
