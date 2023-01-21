@@ -45,7 +45,7 @@ canvas {
 
     width: 40px;
     height: 40px;
-    background: linear-gradient(90deg, rgba(255, 210, 110, 1) 0%, rgba(255, 0, 168, 1) 100%);
+    background: rgb(155, 155, 255);
 
     border-radius: 2px;
 
@@ -55,13 +55,13 @@ canvas {
 }
 
 #upload-window-button:hover::before {
-    opacity: 8%;
+    opacity: 16%;
     transition: opacity 0.15s ease-in;
     cursor: pointer;
 }
 
 #upload-window-button:active::before {
-    opacity: 24%;
+    opacity: 32%;
     transition: opacity 0s ease-in;
     cursor: pointer;
 }
@@ -98,7 +98,7 @@ canvas {
 
     width: 40px;
     height: 40px;
-    background: linear-gradient(90deg, rgba(255, 210, 110, 1) 0%, rgba(255, 0, 168, 1) 100%);
+    background: rgb(155, 155, 255);
 
     border-radius: 2px;
 
@@ -108,13 +108,13 @@ canvas {
 }
 
 #select-window-button:hover::before {
-    opacity: 8%;
+    opacity: 16%;
     transition: opacity 0.15s ease-in;
     cursor: pointer;
 }
 
 #select-window-button:active::before {
-    opacity: 24%;
+    opacity: 32%;
     transition: opacity 0s ease-in;
     cursor: pointer;
 }
@@ -239,9 +239,29 @@ canvas {
     margin-right: 16px;
 }
 
-.select-image {
+.select-entry {
     position: relative;
+    width: 96px;
+    height: 96px;
+}
+
+.select-image {
+    position: absolute;
     border-radius: 50%;
+}
+
+.select-button {
+    position: absolute;
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    background-color: transparent;
+    border: none;
+}
+
+.select-button:hover, 
+.select-button:active {
+    cursor: pointer;
 }
 
 .select-label {

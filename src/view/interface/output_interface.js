@@ -64,7 +64,6 @@ export class OutputInterface {
         this.renderer.setSize(w, h)
     }
     plot(data) {
-        console.log(data)
         this.reset()
 
         for (let i = 0; i < data["unique"].length; i++) {

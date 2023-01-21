@@ -8,7 +8,7 @@ export class InputInterface {
     }
     store_image(file) {
         this.to_image(file).then((image) => {
-            this.image = this.resize_image(image, 512)
+            this.image = this.resize_image(image, 384)
             this.to_DataURL(this.image).then(
                 (file) => this.mediator.notify("image_send", file)
             )
@@ -138,6 +138,7 @@ class SelectWindow {
         $("#wrapper").append($modal)
 
         this.$select_zone = $select_zone
+        this.mediator = mediator
     }
     update(image, entries) {
         this.image = image
@@ -154,22 +155,27 @@ class SelectWindow {
         let r = Math.round(Math.max((y2 - y1) / 2, (x2 - x1) / 2))
         r = Math.min(Math.min(this.image.width - cx, cx), Math.min(this.image.height - cy, cy), r)
 
-        $canvas.get(0).width = 128
-        $canvas.get(0).height = 128
+        $canvas.get(0).width = 96
+        $canvas.get(0).height = 96
 
         let ctx = $canvas.get(0).getContext("2d")
-        ctx.drawImage(this.image, cx - r, cy - r, 2 * r, 2 * r, 0, 0, 128, 128)
+        ctx.drawImage(this.image, cx - r, cy - r, 2 * r, 2 * r, 0, 0, 96, 96)
 
         return $canvas
     }
     create_card(data) {
         let $card = $("<div>", { "class": "select-card" })
-
+        
+        let $entry = $("<div>", { "class": "select-entry" })
         let $image = this.crop_image(data["box"])
         let $label = $("<span>", { "class": "select-label" })
+        let $button = $("<button>", { "class": "select-button"})
+        $button.click(() => {this.mediator.notify("plot_point", data); this.hide()})
         $label.text(data["label"])
 
-        $card.append($image)
+        $entry.append($image)
+        $entry.append($button)
+        $card.append($entry)
         $card.append($label)
 
         return $card
