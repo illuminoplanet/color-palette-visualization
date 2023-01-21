@@ -1,5 +1,6 @@
 from PIL import Image
 import numpy as np
+from multiprocessing import Pool
 
 from .object_detector import ObjectDetector
 from .cp_extractor import CPExtractor
@@ -12,23 +13,27 @@ class Model:
 
     def process(self, blob):
         array = self._blob_to_array(blob)
-        results = []
+        results = []    
 
         object_detected = self.object_detector.process(array)
-        for i, (label, box, image) in enumerate(object_detected):
-            color_palette = self.cp_extractor.process(image)
-            unique, count = self._count_unique(array)
-
-            result = {
-                "label": label,
-                "box": box,
-                "color_palette": color_palette.tolist(),
-                "unique": unique.tolist(),
-                "count": count.tolist(),
-            }
-            results.append(result)
-
+        with Pool() as p:
+            for entry in object_detected:
+                result = p.apply(self._get_result, (*entry,))
+                results.append(result)
         return results
+
+    def _get_result(self, label, box, image):
+        color_palette = self.cp_extractor.process(image)
+        unique, count = self._count_unique(image)
+
+        result = {
+            "label": label,
+            "box": box,
+            "color_palette": color_palette.tolist(),
+            "unique": unique.tolist(),
+            "count": count.tolist(),
+        }
+        return result
 
     def _blob_to_array(self, image):
         image = Image.open(image)
