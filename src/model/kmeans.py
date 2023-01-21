@@ -13,7 +13,7 @@ class KMeans:
         n_iter = params["n_iter"]
         batch_size = params["batch_size"]
 
-        for i in range(n_iter):
+        for _ in range(n_iter):
             # Create minibatch of size batch_size from data
             batch = data[np.random.choice(data_size, batch_size)]
             # Assign each data to closest centroid
@@ -38,9 +38,14 @@ class KMeans:
         return cluster
 
     def _update_centroid(self, centroid, cluster):
-
-        new_centroid = np.array([np.mean(c, axis=0) for c in cluster], dtype=np.float32)
-        done = np.mean(self._get_distance(new_centroid, centroid)) < 0.1
+        new_centroid = []
+        for i in range(centroid.shape[0]):
+            if cluster[i].size:
+                new_centroid.append(np.mean(cluster[i], axis=0)) 
+            else:
+                new_centroid.append(centroid[i])
+        new_centroid = np.array(new_centroid, dtype=np.float32)
+        done = np.mean(self._get_distance(new_centroid, centroid)) < 1
 
         return new_centroid, done
 
