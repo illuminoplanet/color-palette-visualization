@@ -36,7 +36,7 @@ class Mediator {
         }
         if (event === "process_result") {
             let input_interface = this.components["input_interface"]
-            input_interface.update_carousel(data["results"])
+            input_interface.select_window.update(input_interface.image, data)
         }
         if (event === "plot_point") {
             let output_interface = this.components["output_interface"]
@@ -46,6 +46,10 @@ class Mediator {
             let input_interface = this.components["input_interface"]
             input_interface.upload_window.show()
         }
+        if (event === "show_select_window") {
+            let input_interface = this.components["input_interface"]
+            input_interface.select_window.show()
+        }
     }
 }
 
@@ -54,7 +58,6 @@ class RequestHandler {
         this.mediator = mediator
     }
     send_image(image) {
-        console.log(image)
         let form_data = new FormData()
         form_data.append("image", image)
 
@@ -72,8 +75,3 @@ class RequestHandler {
 window.onload = () => {
     new View()
 }
-
-// 쉐브론 
-// 옥시덴탈 페트롤룸
-// 애플 
-// 

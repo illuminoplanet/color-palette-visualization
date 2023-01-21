@@ -218,6 +218,37 @@ canvas {
     color:#aaa;
 }
 
+#select-zone {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+
+    position: relative;
+    height: 100%;
+}
+
+.select-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    margin-left: 16px;
+    margin-right: 16px;
+}
+
+.select-image {
+    position: relative;
+    border-radius: 50%;
+}
+
+.select-label {
+    margin-top: 32px;
+    text-align: center;
+}
+
 #upload-icon.drag-enter, 
 #upload-text.drag-enter {
     color:rgb(155, 155, 255);

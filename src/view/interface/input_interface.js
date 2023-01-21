@@ -3,13 +3,12 @@ export class InputInterface {
         this.mediator = mediator
 
         this.upload_window = new UploadWindow(mediator)
-        this.instance_carousel = new InstanceCarousel(mediator)
+        this.select_window = new SelectWindow(mediator)
         this.sidebar = new SideBar(mediator)
     }
     store_image(file) {
         this.to_image(file).then((image) => {
             this.image = this.resize_image(image, 512)
-            console.log(this.image)
             this.to_DataURL(this.image).then(
                 (file) => this.mediator.notify("image_send", file)
             )
@@ -43,19 +42,9 @@ export class InputInterface {
         canvas.height = image.height * ratio
 
         let ctx = canvas.getContext("2d")
-        ctx.drawImage(image, 0, 0)
+        ctx.drawImage(image, 0, 0, canvas.width, canvas.height)
 
         return canvas
-    }
-    update_carousel(entries) {
-        this.instance_carousel.update_carousel(this.image, entries)
-    }
-}
-
-class Button {
-    constructor(id, onclick) {
-        let $button = $("<button>", { "id": id })
-        $button.click(onclick)
     }
 }
 
@@ -126,36 +115,58 @@ class UploadWindow {
     }
 }
 
-class InstanceCarousel {
+class SelectWindow {
     constructor(mediator) {
-        this.$carousel = $("<div>", { "id": "carousel" })
-        $("#wrapper").append(this.$carousel)
+        let $modal = $("<div>", { "class": "modal", "id": "select-window", "is_open": false })
+        let $modal_content = $("<div>", { "class": "modal-content" })
+        let $modal_header = $("<div>", { "class": "modal-header" })
+        let $modal_seperator = $("<hr>", { "class": "modal-seperator" })
+        let $modal_body = $("<div>", { "class": "modal-body" })
+        let $modal_close = $("<span>", { "class": "modal-close" })
+        $modal_close.text("\u2715")
+        $modal_close.click(this.hide)
+        $modal_header.text("Select Object")
 
+        let $select_zone = $("<div>", { "id": "select-zone" })
+
+        $modal_body.append($select_zone)
+        $modal_header.append($modal_close)
+        $modal_content.append($modal_header)
+        $modal_content.append($modal_seperator)
+        $modal_content.append($modal_body)
+        $modal.append($modal_content)
+        $("#wrapper").append($modal)
+
+        this.$select_zone = $select_zone
     }
-    update_carousel(image, entries) {
+    update(image, entries) {
         this.image = image
         for (let i = 0; i < entries.length; i++) {
-            this.$carousel.append(this.create_card(entries[i]))
+            this.$select_zone.append(this.create_card(entries[i]))
         }
     }
     crop_image(box) {
         const [x1, y1, x2, y2] = box
 
-        let $canvas = $("<canvas>", { "class": "carousel-image" })
+        let $canvas = $("<canvas>", { "class": "select-image" })
 
-        $canvas.get(0).width = this.image.width * 0.1
-        $canvas.get(0).height = this.image.height * 0.1
+        const [cy, cx] = [Math.round((y2 + y1) / 2), Math.round((x2 + x1) / 2)]
+        let r = Math.round(Math.max((y2 - y1) / 2, (x2 - x1) / 2))
+        r = Math.min(Math.min(this.image.width - cx, cx), Math.min(this.image.height - cy, cy), r)
+
+        $canvas.get(0).width = 128
+        $canvas.get(0).height = 128
 
         let ctx = $canvas.get(0).getContext("2d")
-        ctx.drawImage(this.image, x1, y1, x2 - x1, y2 - y1, 0, 0, x2 - x1, y2 - y1)
+        ctx.drawImage(this.image, cx - r, cy - r, 2 * r, 2 * r, 0, 0, 128, 128)
 
         return $canvas
     }
     create_card(data) {
-        let $card = $("<div>", { "class": "carousel-card" })
+        let $card = $("<div>", { "class": "select-card" })
 
         let $image = this.crop_image(data["box"])
-        let $label = $("<span>", { "class": "carousel-label" })
+        let $label = $("<span>", { "class": "select-label" })
         $label.text(data["label"])
 
         $card.append($image)
@@ -163,7 +174,16 @@ class InstanceCarousel {
 
         return $card
     }
-} 
+    show() {
+        $("#select-window").attr("is_open", true)
+        $("#select-window").show()
+        $("#sidebar").removeClass("open")
+    }
+    hide() {
+        $("#select-window").attr("is_open", false)
+        $("#select-window").hide()
+    }
+}
 
 class SideBar {
     constructor(mediator) {
