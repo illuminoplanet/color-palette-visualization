@@ -1,28 +1,35 @@
 import numpy as np
 
-from .kmeans import KMeans
+from .minibatch_kmeans import MiniBatch_KMeans
 
 
-class CPExtractor:
+class ColorPaletteExtractor:
     def __init__(self):
-        self.cp_algorithm = KMeans()
+        self.clustering = MiniBatch_KMeans()
 
-    def process(self, srgb):
-        lab_array = self._srgb_to_lab(srgb)
-        color_palette = self.cp_algorithm(
-            lab_array, 8, params={"n_iter": 100, "batch_size": 1024}
-        )
-        color_palette = self._lab_to_srgb(color_palette) / 255
+    def extract(self, rgb):
+        lab = self._rgb_to_lab(rgb)
+        color_palette = self.clustering.cluster(lab, k=8)[0]
+        color_palette = self._lab_to_rgb(color_palette)
+
         return color_palette
 
-    def _srgb_to_lab(self, srgb):
-        # sRGB to linear RGB
-        rgb = np.zeros_like(srgb, dtype=np.float32)
-        srgb = srgb / 255
-        mask = srgb <= 0.04045
+    def _rgb_to_lab(self, rgb):
+        """
+        Convert from sRGB color space to L*a*b color space
 
-        rgb[mask] = srgb[mask] / 12.92
-        rgb[~mask] = ((srgb[~mask] + 0.055) / 1.055) ** 2.4
+        https://en.wikipedia.org/wiki/SRGB#From_sRGB_to_CIE_XYZ
+        https://en.wikipedia.org/wiki/CIELAB_color_space#From_CIEXYZ_to_CIELAB
+
+        """
+
+        # sRGB to linear RGB
+        lrgb = np.zeros_like(rgb, dtype=np.float32)
+        rgb = rgb / 255
+        mask = rgb <= 0.04045
+
+        lrgb[mask] = rgb[mask] / 12.92
+        lrgb[~mask] = ((rgb[~mask] + 0.055) / 1.055) ** 2.4
 
         # linear RGB to XYZ
         m = np.array(
@@ -32,7 +39,7 @@ class CPExtractor:
                 [0.0193, 0.1192, 0.9505],
             ]
         )
-        xyz = np.dot(m, rgb.T).T * 100
+        xyz = np.dot(m, lrgb.T).T * 100
 
         # XYZ to L*a*b
         delta = 6 / 29
@@ -54,7 +61,15 @@ class CPExtractor:
 
         return lab
 
-    def _lab_to_srgb(self, lab):
+    def _lab_to_rgb(self, lab):
+        """
+        Convert from L*a*b color space to sRGB color space
+
+        https://en.wikipedia.org/wiki/CIELAB_color_space#From_CIELAB_to_CIEXYZ
+        https://en.wikipedia.org/wiki/SRGB#From_CIE_XYZ_to_sRGB
+
+        """
+
         # L*a*b to XYZ
         delta = 6 / 29
 
@@ -82,14 +97,14 @@ class CPExtractor:
                 [0.0557, -0.2040, 1.0570],
             ]
         )
-        rgb = np.dot(m, xyz.T).T / 100
+        lrgb = np.dot(m, xyz.T).T / 100
 
         # linear RGB to sRGB
-        srgb = np.zeros_like(rgb, dtype=np.float32)
-        mask = rgb <= 0.0031308
+        rgb = np.zeros_like(lrgb, dtype=np.float32)
+        mask = lrgb <= 0.0031308
 
-        srgb[mask] = rgb[mask] * 12.92
-        srgb[~mask] = (rgb[~mask] ** (1 / 2.4)) * 1.055 - 0.055
-        srgb *= 255
+        rgb[mask] = lrgb[mask] * 12.92
+        rgb[~mask] = (lrgb[~mask] ** (1 / 2.4)) * 1.055 - 0.055
+        rgb *= 255
 
-        return srgb
+        return rgb

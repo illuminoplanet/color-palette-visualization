@@ -16,10 +16,10 @@ class Controller:
         def index():
             return render_template("index.html")
 
-        @app.route("/send_image", methods=["POST"])
-        def send_image():
+        @app.route("/process_image", methods=["POST"])
+        def process_image():
             image = request.files["image"]
-            result = self.model.process(image)
+            result = self.model.process_image(image)
             return jsonify(result)
 
         return app
