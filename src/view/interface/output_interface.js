@@ -43,7 +43,6 @@ export class OutputInterface {
         const material = new THREE.MeshPhongMaterial({
             color: 0xFFFFFF, side: THREE.BackSide
         })
-
         this.cube = new THREE.Mesh(geometry, material)
         this.scene.add(this.cube)
 
@@ -63,11 +62,18 @@ export class OutputInterface {
 
         this.renderer.setSize(w, h)
     }
-    plot(data) {
+    reset() {
+        this.scene.remove.apply(this.scene, this.scene.children)
+
+        this.scene.add(this.ambient_light)
+        this.scene.add(this.point_light)
+        this.scene.add(this.cube)
+    }
+    plot_point(data) {
         this.reset()
 
-        for (let i = 0; i < data["unique"].length; i++) {
-            const [r, g, b] = data["unique"][i]
+        for (let i = 0; i < data["unique_color"].length; i++) {
+            const [r, g, b] = data["unique_color"][i]
             const scale = Math.pow(data["count"][i], 0.15) * 0.02
 
             const color = new THREE.Color(r, g, b)
@@ -101,11 +107,5 @@ export class OutputInterface {
             this.scene.add(sprite)
         }
     }
-    reset() {
-        this.scene.remove.apply(this.scene, this.scene.children)
 
-        this.scene.add(this.ambient_light)
-        this.scene.add(this.point_light)
-        this.scene.add(this.cube)
-    }
 }

@@ -40,7 +40,7 @@ class Mediator {
         }
         if (event === "plot_point") {
             let output_interface = this.components["output_interface"]
-            output_interface.plot(data)
+            output_interface.plot_point(data)
         }
         if (event === "show_upload_window") {
             let input_interface = this.components["input_interface"]
