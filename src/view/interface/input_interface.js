@@ -10,7 +10,7 @@ export class InputInterface {
         this.to_image(file).then((image) => {
             this.image = this.resize_image(image, 384)
             this.to_DataURL(this.image).then(
-                (file) => this.mediator.notify("image_send", file)
+                (file) => this.mediator.notify("process_image", file)
             )
         })
     }

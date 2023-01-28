@@ -71,41 +71,44 @@ export class OutputInterface {
     }
     plot_point(data) {
         this.reset()
-
-        for (let i = 0; i < data["unique_color"].length; i++) {
-            const [r, g, b] = data["unique_color"][i]
-            const scale = Math.pow(data["count"][i], 0.15) * 0.02
-
-            const color = new THREE.Color(r, g, b)
-            const [x, y, z] = [(r - 0.5) * 2, (g - 0.5) * 2, (b - 0.5) * 2]
-            const material = new THREE.SpriteMaterial({ color: color })
-
-            const sprite = new THREE.Sprite(material)
-            sprite.material.rotation = Math.PI / 4
-            sprite.position.set(x, y, z)
-            sprite.scale.set(scale, scale, scale)
-
-            this.scene.add(sprite)
+        // Plot unique color points
+        for (let i = 0; i < data["unique_rgb"].length; i++) {
+            const point = this.create_point(data["unique_rgb"][i], data["unique_count"][i])
+            this.scene.add(point)
         }
+        // Plot color palette color points
         for (let i = 0; i < data["color_palette"].length; i++) {
-            const [r, g, b] = data["color_palette"][i]
-
-            const color = new THREE.Color(r, g, b)
-            const [x, y, z] = [(r - 0.5) * 2, (g - 0.5) * 2, (b - 0.5) * 2]
-            const material = new THREE.SpriteMaterial({ color: color })
-
-            const outline = new THREE.Sprite(new THREE.SpriteMaterial({ color: 0x333333 }))
-            outline.material.rotation = Math.PI / 4
-            outline.position.set(x, y, z)
-            outline.scale.set(0.1, 0.1, 0.1)
-            this.scene.add(outline)
-
-            const sprite = new THREE.Sprite(material)
-            sprite.material.rotation = Math.PI / 4
-            sprite.position.set(x, y, z)
-            sprite.scale.set(0.07, 0.07, 0.07)
-            this.scene.add(sprite)
+            const highlight = this.create_highlight(data["color_palette"][i])
+            const point = this.create_point(data["color_palette"][i], 30)
+            
+            this.scene.add(highlight)
+            this.scene.add(point)
         }
     }
+    create_point(rgb, count) {
+        const [r, g, b] = rgb
+        const [x, y, z] = [(r - 0.5) * 2, (g - 0.5) * 2, (b - 0.5) * 2]
 
+        const scale = Math.pow(count, 0.15) * 0.04
+        const color = new THREE.Color(r, g, b)
+        const material = new THREE.SpriteMaterial({ color: color })
+
+        const point = new THREE.Sprite(material)
+        point.material.rotation = Math.PI / 4
+        point.position.set(x, y, z)
+        point.scale.set(scale, scale, scale)
+
+        return point
+    }
+    create_highlight(rgb) {
+        const [r, g, b] = rgb
+        const [x, y, z] = [(r - 0.5) * 2, (g - 0.5) * 2, (b - 0.5) * 2]
+
+        const highlight = new THREE.Sprite(new THREE.SpriteMaterial({ color: 0x333333 }))
+        highlight.material.rotation = Math.PI / 4
+        highlight.position.set(x, y, z)
+        highlight.scale.set(0.1, 0.1, 0.1)
+        
+        return highlight
+    }
 }

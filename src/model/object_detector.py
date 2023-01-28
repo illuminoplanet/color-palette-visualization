@@ -7,7 +7,7 @@ class ObjectDetector:
         self.processor = DetrImageProcessor.from_pretrained("facebook/detr-resnet-50")
         self.model = DetrForObjectDetection.from_pretrained("facebook/detr-resnet-50")
 
-    def process(self, image):
+    def detect(self, image):
         objects = self._detect_objects(image)
         objects = self._postprocess(image, objects)
 
@@ -28,9 +28,9 @@ class ObjectDetector:
         return results
 
     def _postprocess(self, image, objects):
-        # Start with original whole image
+        # Initialize and append whole image
         h, w = image.shape[:2]
-        postprocessed = ["Whole", (0, 0, w, h), image.copy().reshape(-1, 3)]
+        postprocessed = [("Whole", (0, 0, w, h), image.copy().reshape(-1, 3))]
 
         for _, label, box in objects:
             box = [round(i) for i in box.tolist()]

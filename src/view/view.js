@@ -30,9 +30,9 @@ class Mediator {
             let input_interface = this.components["input_interface"]
             input_interface.store_image(data)
         }
-        if (event === "image_send") {
+        if (event === "process_image") {
             let request_handler = this.components["request_handler"]
-            request_handler.send_image(data)
+            request_handler.process_image(data)
         }
         if (event === "process_result") {
             let input_interface = this.components["input_interface"]
@@ -57,12 +57,12 @@ class RequestHandler {
     constructor(mediator) {
         this.mediator = mediator
     }
-    send_image(image) {
+    process_image(image) {
         let form_data = new FormData()
         form_data.append("image", image)
 
         let response = $.ajax({
-            url: "http://localhost:5000/send_image",
+            url: "http://localhost:5000/process_image",
             type: "POST",
             data: form_data,
             processData: false,
