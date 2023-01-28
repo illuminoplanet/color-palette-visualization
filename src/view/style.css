@@ -250,6 +250,11 @@ canvas {
     border-radius: 50%;
 }
 
+.select-image {
+    position: absolute;
+    border-radius: 50%;
+}
+
 .select-button {
     position: absolute;
     width: 96px;
@@ -259,13 +264,36 @@ canvas {
     border: none;
 }
 
+.select-button::after {
+    content: "";
+    position: absolute;
+    width: 76px;
+    height: 76px;
+    border-radius: 50%;
+    border: 4px solid white;
+    transform: translate(-50%, -50%);
+}
+
+.select-button:hover::after {
+    border: 4px solid orange;
+}
+
+.select-button.selected::after {
+    content: "✓";
+    text-align: center;
+    font-size: 28px;
+    line-height: 76px;
+    color: orange;
+    border: 4px solid orange;
+}
+
 .select-button:hover, 
 .select-button:active {
     cursor: pointer;
 }
 
 .select-label {
-    margin-top: 32px;
+    margin-top: 28px;
     text-align: center;
 }
 

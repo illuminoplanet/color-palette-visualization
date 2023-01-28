@@ -141,6 +141,7 @@ class SelectWindow {
         this.mediator = mediator
     }
     update(image, entries) {
+        this.$select_zone.empty()
         this.image = image
         for (let i = 0; i < entries.length; i++) {
             this.$select_zone.append(this.create_card(entries[i]))
@@ -170,7 +171,13 @@ class SelectWindow {
         let $image = this.crop_image(data["box"])
         let $label = $("<span>", { "class": "select-label" })
         let $button = $("<button>", { "class": "select-button"})
-        $button.click(() => {this.mediator.notify("plot_point", data); this.hide()})
+        $button.click(() => {
+            this.mediator.notify("plot_point", data)
+            this.hide()
+            $(".select-button").removeClass("selected")
+            $button.addClass("selected")
+        })
+            
         $label.text(data["label"])
 
         $entry.append($image)
