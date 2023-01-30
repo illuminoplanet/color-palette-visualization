@@ -25,11 +25,11 @@ export class UploadModal {
         })
     }
     show() {
-        $("#upload-modal").show()
+        $("#upload-modal").fadeIn(150)
         $("#sidebar").removeClass("is_open")
     }
     hide() {
-        $("#upload-modal").hide()
+        $("#upload-modal").fadeOut(75)
     }
 }
 
@@ -80,10 +80,10 @@ export class SelectModal {
         return $canvas
     }
     show() {
-        $("#select-modal").show()
+        $("#select-modal").fadeIn(150)
         $("#sidebar").removeClass("is_open")
     }
     hide() {
-        $("#select-modal").hide()
+        $("#select-modal").fadeOut(75)
     }
 }
