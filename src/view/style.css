@@ -13,15 +13,11 @@ canvas {
     z-index: -10;
 }
 
-#wrapper {
-    height: 100%;
-
-    display: grid;
-    grid-template-columns: repeat(16, 1fr);
-    grid-template-rows: repeat(9, 1fr);
+.sidebar-button {
+    font-size: 32px;
 }
 
-#upload-window-button {
+#upload-modal-button {
     margin: 32px;
     position: relative;
     display: flex;
@@ -39,7 +35,7 @@ canvas {
     transition: background-color 0.2s ease-in;
 }
 
-#upload-window-button::before {
+#upload-modal-button::before {
     position: absolute;
     content: "";
 
@@ -54,19 +50,19 @@ canvas {
     z-index: 5;
 }
 
-#upload-window-button:hover::before {
+#upload-modal-button:hover::before {
     opacity: 16%;
     transition: opacity 0.15s ease-in;
     cursor: pointer;
 }
 
-#upload-window-button:active::before {
+#upload-modal-button:active::before {
     opacity: 32%;
     transition: opacity 0s ease-in;
     cursor: pointer;
 }
 
-#upload-window-icon {
+#upload-modal-icon {
     position: absolute;
     user-select: none;
     font-size: 32px;
@@ -74,7 +70,7 @@ canvas {
 }
 
 
-#select-window-button {
+#select-modal-button {
     margin: 32px;
     position: relative;
     display: flex;
@@ -92,7 +88,7 @@ canvas {
     transition: background-color 0.2s ease-in;
 }
 
-#select-window-button::before {
+#select-modal-button::before {
     position: absolute;
     content: "";
 
@@ -107,19 +103,19 @@ canvas {
     z-index: 5;
 }
 
-#select-window-button:hover::before {
+#select-modal-button:hover::before {
     opacity: 16%;
     transition: opacity 0.15s ease-in;
     cursor: pointer;
 }
 
-#select-window-button:active::before {
+#select-modal-button:active::before {
     opacity: 32%;
     transition: opacity 0s ease-in;
     cursor: pointer;
 }
 
-#select-window-icon {
+#select-modal-icon {
     position: absolute;
     user-select: none;
     font-size: 32px;
@@ -278,7 +274,7 @@ canvas {
     border: 4px solid orange;
 }
 
-.select-button.selected::after {
+.select-button.is_selected::after {
     content: "✓";
     text-align: center;
     font-size: 28px;
@@ -322,7 +318,7 @@ canvas {
     background-color: white;
     box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
 }
-#sidebar.open {
+#sidebar.is_open {
     transition: transform 0.5s cubic-bezier(0, 1, 0, 1);
     transform: translateX(0%);
 }
