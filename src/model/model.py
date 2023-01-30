@@ -32,12 +32,20 @@ class Model:
         color_palette /= 255
         unique_rgb /= 255
 
+        color_palette = sorted(color_palette.tolist(), key=sum)
+        unique_rgb = unique_rgb.tolist()
+        unique_prop = unique_prop.tolist()
+
+        unique_key = [sum(x) for x in unique_rgb]
+        unique_rgb = [x[1] for x in sorted(zip(unique_key, unique_rgb), reverse=True)]
+        unique_prop = [x[1] for x in sorted(zip(unique_key, unique_prop), reverse=True)]
+
         result = {
             "label": label,
             "box": box,
-            "color_palette": color_palette.tolist(),
-            "unique_rgb": unique_rgb.tolist(),
-            "unique_prop": unique_prop.tolist(),
+            "color_palette": color_palette,
+            "unique_rgb": unique_rgb,
+            "unique_prop": unique_prop,
         }
         return result
 

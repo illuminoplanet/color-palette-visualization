@@ -71,18 +71,31 @@ export class OutputInterface {
     }
     plot_point(data) {
         this.reset()
-        // Plot unique color points
-        for (let i = 0; i < data["unique_rgb"].length; i++) {
-            const point = this.create_point(data["unique_rgb"][i], data["unique_prop"][i])
-            this.scene.add(point)
-        }
-        // Plot color palette color points
+        this.points = []
+
+        // Color palette color points
         for (let i = 0; i < data["color_palette"].length; i++) {
             const highlight = this.create_highlight(data["color_palette"][i])
             const point = this.create_point(data["color_palette"][i], 0.065)
-            
-            this.scene.add(highlight)
-            this.scene.add(point)
+            this.points.push([point, highlight])
+        }
+        // Unique color points
+        for (let i = 0; i < data["unique_rgb"].length; i++) {
+            const point = this.create_point(data["unique_rgb"][i], data["unique_prop"][i])
+            this.points.push([point])
+        }
+        const inteval = Math.min(30, Math.round(1000 / data["unique_rgb"].length))
+        this.interval_id = setInterval(this.add_point.bind(this), inteval)
+    }
+    add_point() {
+        if (!this.points.length) {
+            clearInterval(this.interval_id)
+        }
+        else {
+            const point = this.points.pop()
+            for (let i = 0; i < point.length; i++) {
+                this.scene.add(point[i])
+            }
         }
     }
     create_point(rgb, scale) {
