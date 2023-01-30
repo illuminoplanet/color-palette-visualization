@@ -18,7 +18,7 @@ class Model:
         object_detected = self.object_detector.detect(image)
         with Pool() as p:
             for object in object_detected:
-                # Extract color palette & Count unique rgb color
+                # Extract color palette & Get unique rgb color proportion
                 result = p.apply(self._get_result, (*object,))
                 results.append(result)
 
@@ -26,7 +26,7 @@ class Model:
 
     def _get_result(self, label, box, image):
         color_palette = self.color_palette_extractor.extract(image)
-        unique_rgb, unique_count = self._count_unique(image)
+        unique_rgb, unique_prop = self._count_unique(image)
 
         # Normalize RGB values
         color_palette /= 255
@@ -37,7 +37,7 @@ class Model:
             "box": box,
             "color_palette": color_palette.tolist(),
             "unique_rgb": unique_rgb.tolist(),
-            "unique_count": unique_count.tolist(),
+            "unique_prop": unique_prop.tolist(),
         }
         return result
 
@@ -53,4 +53,8 @@ class Model:
         image = (image // bin_size) * bin_size
 
         unique_rgb, unique_count = np.unique(image, axis=0, return_counts=True)
-        return unique_rgb, unique_count
+
+        unique_prop = np.log10(unique_count) 
+        unique_prop = unique_prop / unique_prop.max() * 0.05
+
+        return unique_rgb, unique_prop

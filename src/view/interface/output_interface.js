@@ -73,23 +73,22 @@ export class OutputInterface {
         this.reset()
         // Plot unique color points
         for (let i = 0; i < data["unique_rgb"].length; i++) {
-            const point = this.create_point(data["unique_rgb"][i], data["unique_count"][i])
+            const point = this.create_point(data["unique_rgb"][i], data["unique_prop"][i])
             this.scene.add(point)
         }
         // Plot color palette color points
         for (let i = 0; i < data["color_palette"].length; i++) {
             const highlight = this.create_highlight(data["color_palette"][i])
-            const point = this.create_point(data["color_palette"][i], 30)
+            const point = this.create_point(data["color_palette"][i], 0.065)
             
             this.scene.add(highlight)
             this.scene.add(point)
         }
     }
-    create_point(rgb, count) {
+    create_point(rgb, scale) {
         const [r, g, b] = rgb
         const [x, y, z] = [(r - 0.5) * 2, (g - 0.5) * 2, (b - 0.5) * 2]
 
-        const scale = Math.pow(count, 0.15) * 0.04
         const color = new THREE.Color(r, g, b)
         const material = new THREE.SpriteMaterial({ color: color })
 
