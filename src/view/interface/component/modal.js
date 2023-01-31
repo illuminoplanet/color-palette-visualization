@@ -11,6 +11,7 @@ export class UploadModal {
         })
         $("#upload-zone").on("drop", (e) => {
             this.mediator.notify("preprocess_image", e.originalEvent.dataTransfer.files[0])
+            $("#processing-screen").css({ display: "flex" })
             $("#upload-modal").hide()
         })
         $("#upload-zone").on("dragover dragenter", () => {
@@ -43,6 +44,7 @@ export class SelectModal {
         for (let i = 0; i < entries.length; i++) {
             $("#select-zone").append(this.create_card(image, entries[i]))
         }
+        this.mediator.notify("plot_point", entries[0])
     }
     create_card(image, data) {
         let $card = $("<div>", { "class": "select-card" })

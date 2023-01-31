@@ -274,3 +274,51 @@ button:hover {
     font-size: 32px;
     color:#aaa;
 }
+
+/* || Processing Screen */
+
+#processing-screen {
+    display: none;
+    flex-direction: column;
+   
+    justify-content: center;
+    align-items: center;
+
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 10;
+}
+
+#processing-spinner {
+    position: relative;
+    margin-top: 20px;
+
+    width: 32px;
+    height: 32px;
+    
+    border: 2px solid transparent;
+    border-top-color: white;
+    border-bottom-color: white;
+    border-radius: 50%;
+    animation: processing 1s ease infinite
+}
+
+#processing-text {
+    position: relative;
+    user-select: none;
+    font-size: 32px;
+    color: white;
+}
+
+@keyframes processing {
+    from {
+        transform: rotate(0turn);
+    }
+    to {
+        transform: rotate(1turn);
+    }
+}

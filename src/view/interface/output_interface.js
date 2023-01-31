@@ -28,6 +28,7 @@ export class OutputInterface {
         this.controller.enableAnimations = true
         this.controller.dampingFactor = 1
         this.controller.wMax = 1
+        this.controller.autoRotate = true
         this.controller.setGizmosVisible(false)
 
         // Light

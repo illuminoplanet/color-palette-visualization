@@ -9,7 +9,10 @@ export class SideBar {
     mouse_move(event) {
         event = event || window.event
         if (event.pageX >= window.innerWidth - 64 && event.pageX <= window.innerWidth) {
-            if ($("#upload-modal").is(":hidden") && $("#select-modal").is(":hidden")) 
+            if ($("#upload-modal").is(":hidden") && 
+                $("#select-modal").is(":hidden") &&
+                $("#processing-screen").is(":hidden")
+            ) 
                 $("#sidebar").addClass("is_open")
         }
 		else 

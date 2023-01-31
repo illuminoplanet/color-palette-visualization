@@ -13,6 +13,9 @@ export class RequestHandler {
             processData: false,
             contentType: false,
             cache: false,
-        }).then((response) => { this.mediator.notify("process_result", response) })
+        }).then((response) => { 
+            this.mediator.notify("process_result", response) 
+            $("#processing-screen").hide()
+        })
     }
 }

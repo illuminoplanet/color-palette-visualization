@@ -6,7 +6,6 @@ export class Mediator {
         this.components = { ...this.components, ...components }
     }
     notify(event, data) {
-        console.log(event)
         if (event === "preprocess_image") {
             let input_interface = this.components["input_interface"]
             input_interface.preprocess_image(data)
