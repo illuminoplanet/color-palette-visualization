@@ -16,6 +16,7 @@ export class RequestHandler {
         }).then((response) => { 
             this.mediator.notify("process_result", response) 
             $("#processing-screen").hide()
+            this.mediator.notify("set_control", true)
         })
     }
 }

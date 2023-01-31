@@ -30,5 +30,9 @@ export class Mediator {
             let input_interface = this.components["input_interface"]
             input_interface.select_modal.show()
         }
+        if (event === "set_control") {
+            let output_interface = this.components["output_interface"]
+            output_interface.controller.enabled = data
+        }
     }
 }

@@ -1,6 +1,6 @@
 export class UploadModal {
     constructor(mediator) {
-        $("#upload-modal .modal-close").click(this.hide)
+        $("#upload-modal .modal-close").click(this.hide.bind(this))
         this.mediator = mediator
         this.init_event_listener()
     }
@@ -13,6 +13,7 @@ export class UploadModal {
             this.mediator.notify("preprocess_image", e.originalEvent.dataTransfer.files[0])
             $("#processing-screen").css({ display: "flex" })
             $("#upload-modal").hide()
+            this.mediator.notify("set_control", false)
         })
         $("#upload-zone").on("dragover dragenter", () => {
             $("#upload-zone").addClass("drag-enter")
@@ -28,15 +29,17 @@ export class UploadModal {
     show() {
         $("#upload-modal").fadeIn(150)
         $("#sidebar").removeClass("is_open")
+        this.mediator.notify("set_control", false)
     }
     hide() {
         $("#upload-modal").fadeOut(75)
+        this.mediator.notify("set_control", true)
     }
 }
 
 export class SelectModal {
     constructor(mediator) {
-        $("#select-modal .modal-close").click(this.hide)
+        $("#select-modal .modal-close").click(this.hide.bind(this))
         this.mediator = mediator
     }
     process_result(image, entries) {
@@ -84,8 +87,10 @@ export class SelectModal {
     show() {
         $("#select-modal").fadeIn(150)
         $("#sidebar").removeClass("is_open")
+        this.mediator.notify("set_control", false)
     }
     hide() {
         $("#select-modal").fadeOut(75)
+        this.mediator.notify("set_control", true)
     }
 }
