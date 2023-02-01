@@ -7,7 +7,7 @@ export class RequestHandler {
         form_data.append("image", image)
 
         let response = $.ajax({
-            url: "http://localhost:5000/process_image",
+            url: "http://localhost:8000/process_image",
             type: "POST",
             data: form_data,
             processData: false,
