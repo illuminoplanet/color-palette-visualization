@@ -1,6 +1,6 @@
 from PIL import Image
 import numpy as np
-from multiprocessing import Pool
+from multiprocessing import get_context
 
 from .object_detector import ObjectDetector
 from .color_palette_extractor import ColorPaletteExtractor
@@ -16,13 +16,15 @@ class Model:
         results = []
 
         object_detected = self.object_detector.detect(image)
-        with Pool() as p:
+        with get_context("spawn").Pool() as p:
             for object in object_detected:
                 # Extract color palette & Get unique rgb color proportion
                 result = p.apply(self._get_result, (*object,))
                 results.append(result)
 
         return results
+
+        
 
     def _get_result(self, label, box, image):
         color_palette = self.color_palette_extractor.extract(image)
