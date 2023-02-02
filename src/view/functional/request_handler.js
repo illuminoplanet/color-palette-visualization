@@ -1,7 +1,6 @@
 export class RequestHandler {
     constructor(mediator) {
         this.mediator = mediator
-        this.port = process.env.PORT
     }
     process_image(image) {
         let form_data = new FormData()
