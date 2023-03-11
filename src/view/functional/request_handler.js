@@ -7,7 +7,7 @@ export class RequestHandler {
         form_data.append("image", image)
 
         let response = $.ajax({
-            url: "https://color-palette-visualization.herokuapp.com/process_image",
+	    url: "/color-palette-visualization/process_image",
             type: "POST",
             data: form_data,
             processData: false,

@@ -13,14 +13,17 @@ class Controller:
         return self.app
 
     def _get_flask_app(self):
-        app = Flask(__name__, template_folder="./view", static_folder="./view")
+        app = Flask(__name__, 
+                template_folder="./view",
+                static_url_path="/color-palette-visualization/view",
+                static_folder="./view")
 
         @app.route("/")
         @cross_origin()
         def index():
             return render_template("index.html")
 
-        @app.route("/process_image", methods=["POST"])
+        @app.route("/color-palette-visualization/process_image", methods=["POST"])
         @cross_origin()
         def process_image():
             image = request.files["image"]
