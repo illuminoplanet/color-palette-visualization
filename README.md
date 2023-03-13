@@ -3,7 +3,7 @@
 ## Project Description
 
 ![cpv_1](images/cpv_1.gif)
-Color Palette Visualization is a flask project for visualizing extracted color palettes to 3D space. 
+**Color Palette Visualization** is a flask project for visualizing extracted color palettes to 3D space. 
 
 
 ![cpv_2](images/cpv_2.gif)
