@@ -2,6 +2,13 @@
 
 ## Project Description
 
+![cpv_1](images/cpv_1.gif)
+Color Palette Visualization is a flask project for visualizing extracted color palettes to 3D space. 
+
+
+![cpv_2](images/cpv_2.gif)
+The project uses a pre-trained object detection model to detect objects in the uploaded image, allowing the user to plot the color palette for each object individually.
+
 ## Getting Started
 
 ### Prerequisites
@@ -30,11 +37,7 @@ It is recommended to use virtual environment for project isolation.
    python src/main.py
    ```
 
-## Usage
-
-<!-- LICENSE -->
 ## License
 
 Distributed under the MIT License. See `LICENSE.txt` for more information.
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
